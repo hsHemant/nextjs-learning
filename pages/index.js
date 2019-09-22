@@ -1,6 +1,8 @@
-import Layout from '../components/MyLayout';
-import Link from 'next/link';
-import fetch from 'isomorphic-unfetch';
+import https from "https";
+import Link from "next/link";
+import fetch from "isomorphic-unfetch";
+
+import Layout from "../components/MyLayout";
 
 const Index = props => (
   <Layout>
@@ -17,8 +19,14 @@ const Index = props => (
   </Layout>
 );
 
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
+
 Index.getInitialProps = async function() {
-  const res = await fetch('https://api.tvmaze.com/search/shows?q=batman');
+  const res = await fetch("https://api.tvmaze.com/search/shows?q=batman", {
+    agent
+  });
   const data = await res.json();
 
   console.log(`Show data fetched. Count: ${data.length}`);
